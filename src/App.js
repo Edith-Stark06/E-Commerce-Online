@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import Navigation from "./Navigation/Nav";
 import Products from "./Products/Products";
@@ -9,11 +10,11 @@ import Card from "./components/Card";
 import "./index.css";
 
 function App() {
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
   const [selectedCategory, setSelectedCategory] = useState(null);
-
-  // ----------- Input Filter -----------
   const [query, setQuery] = useState("");
 
+  // Handle input search
   const handleInputChange = (event) => {
     setQuery(event.target.value);
   };
@@ -22,25 +23,24 @@ function App() {
     (product) => product.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
   );
 
-  // ----------- Radio Filtering -----------
+  // Handle category filter change
   const handleChange = (event) => {
     setSelectedCategory(event.target.value);
   };
 
-  // ------------ Button Filtering -----------
+  // Handle button filtering
   const handleClick = (event) => {
     setSelectedCategory(event.target.value);
   };
 
+  // Filter products based on input and category
   function filteredData(products, selected, query) {
     let filteredProducts = products;
 
-    // Filtering Input Items
     if (query) {
       filteredProducts = filteredItems;
     }
 
-    // Applying selected filter
     if (selected) {
       filteredProducts = filteredProducts.filter(
         ({ category, color, company, newPrice, title }) =>
@@ -69,14 +69,63 @@ function App() {
 
   const result = filteredData(products, selectedCategory, query);
 
+  // --------------- LOGIN PAGE ---------------
+  if (!isAuthenticated) {
+    return (
+      <div style={loginPageStyle}>
+        <h1>Welcome to Our Store</h1>
+        <p>Please login to continue</p>
+        <button onClick={() => loginWithRedirect()} style={buttonStyle}>
+          Login / Signup
+        </button>
+      </div>
+    );
+  }
+
+  // --------------- MAIN APP PAGE ---------------
   return (
     <>
-      <Sidebar handleChange={handleChange} />
       <Navigation query={query} handleInputChange={handleInputChange} />
+
+      {/* Logout Button */}
+      <div style={{ textAlign: "right", padding: "10px" }}>
+        <span>Welcome, {user.name}</span>
+        <button onClick={() => logout({ returnTo: window.location.origin })} style={logoutButtonStyle}>
+          Logout
+        </button>
+      </div>
+
+      <Sidebar handleChange={handleChange} />
       <Recommended handleClick={handleClick} />
       <Products result={result} />
     </>
   );
 }
+
+// Styles
+const loginPageStyle = {
+  textAlign: "center",
+  marginTop: "100px",
+};
+
+const buttonStyle = {
+  padding: "10px 20px",
+  fontSize: "16px",
+  cursor: "pointer",
+  backgroundColor: "#007bff",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+};
+
+const logoutButtonStyle = {
+  padding: "5px 10px",
+  marginLeft: "10px",
+  cursor: "pointer",
+  backgroundColor: "red",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+};
 
 export default App;
