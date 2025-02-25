@@ -73,7 +73,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <div style={loginPageStyle}>
-        <h1>Welcome to Our Store</h1>
+        <h1>Welcome to E-Commerce Shoe Website</h1>
         <p>Please login to continue</p>
         <button onClick={() => loginWithRedirect()} style={buttonStyle}>
           Login / Signup
