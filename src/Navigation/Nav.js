@@ -15,7 +15,7 @@ const Nav = ({ handleInputChange, query }) => {
         />
       </div>
       <div className="profile-container">
-        <a href="#">
+        <a href="pro">
           <FiHeart className="nav-icons" />
         </a>
         <a href="">
