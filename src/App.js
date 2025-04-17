@@ -135,8 +135,8 @@ const overlay = {
 const loginCard = {
   width: "400px",
   padding: "30px",
-  backgroundColor: " 	#F8C8DC",
-  borderRadius: "20px",
+  backgroundColor: "white",
+  borderRadius: "10px",
   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
   textAlign: "center",
 };
